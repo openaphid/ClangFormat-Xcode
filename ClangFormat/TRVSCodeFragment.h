@@ -29,6 +29,7 @@
     usingClangFormatAtLaunchPath:(NSString *)launchPath
                        lineRange:(NSRange)lineRange
                            block:(void (^)(NSString *formattedString,
+                                           BOOL changed,
                                            NSError *error))block;
 
 @property (nonatomic, copy) NSString *string;

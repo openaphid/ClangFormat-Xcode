@@ -25,7 +25,7 @@
 @implementation TRVSCodeFragment
 
 + (instancetype)fragmentUsingBlock:
-                    (void (^)(TRVSCodeFragmentBuilder *builder))block {
+    (void (^)(TRVSCodeFragmentBuilder *builder))block {
   TRVSCodeFragmentBuilder *builder = [TRVSCodeFragmentBuilder new];
   block(builder);
   return [builder build];
@@ -78,6 +78,7 @@
     usingClangFormatAtLaunchPath:(NSString *)launchPath
                        lineRange:(NSRange)lineRange
                            block:(void (^)(NSString *formattedString,
+                                           BOOL changed,
                                            NSError *error))block {
   NSURL *tmpFileURL = [self.fileURL URLByAppendingPathExtension:@"trvs"];
   [self.string writeToURL:tmpFileURL
@@ -109,20 +110,20 @@
 
   NSData *errorData = [errorPipe.fileHandleForReading readDataToEndOfFile];
 
-  NSString *formattedDoc = [NSString stringWithContentsOfURL:tmpFileURL
-                                                    encoding:NSUTF8StringEncoding
-                                                       error:NULL];
+  NSString *formattedDoc =
+      [NSString stringWithContentsOfURL:tmpFileURL
+                               encoding:NSUTF8StringEncoding
+                                  error:NULL];
   [self updateRangeToReplace:formattedDoc];
-  block(self.formattedString,
+  block(self.formattedString, ![self.string isEqual:self.formattedString],
         errorData.length > 0
             ? [NSError errorWithDomain:@"com.travisjeffery.error"
                                   code:-99
                               userInfo:@{
-                                         NSLocalizedDescriptionKey :
-                                         [[NSString alloc]
-                                             initWithData:errorData
-                                                 encoding:NSUTF8StringEncoding]
-                                       }]
+                                NSLocalizedDescriptionKey : [[NSString alloc]
+                                    initWithData:errorData
+                                        encoding:NSUTF8StringEncoding]
+                              }]
             : nil);
 
   [[NSFileManager defaultManager] removeItemAtURL:tmpFileURL error:NULL];

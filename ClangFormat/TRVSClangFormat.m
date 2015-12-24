@@ -43,8 +43,7 @@ static TRVSClangFormat *sharedPlugin;
   self.bundle = plugin;
   self.preferences = [[TRVSPreferences alloc]
       initWithApplicationID:self.bundle.bundleIdentifier];
-  NSString *style = [self.preferences objectForKey:[self stylePreferencesKey]]
-                        ?: [[self styles] firstObject];
+  NSString *style = @"File";
   self.formatter = [TRVSFormatter sharedFormatter];
   self.formatter.style = style;
 
@@ -175,6 +174,8 @@ static TRVSClangFormat *sharedPlugin;
   [self.formatMenu addItem:useSystemClangFormatMenuItem];
 }
 
+#define _kMenuLabel @"Clang Format(QN_151224)"
+
 - (void)addMenuItemsToMenu {
   NSMenuItem *menuItem = [[NSApp mainMenu] itemWithTitle:@"Edit"];
   if (!menuItem)
@@ -183,13 +184,13 @@ static TRVSClangFormat *sharedPlugin;
   [[menuItem submenu] addItem:[NSMenuItem separatorItem]];
 
   NSMenuItem *actionMenuItem =
-      [[NSMenuItem alloc] initWithTitle:NSLocalizedString(@"Clang Format", nil)
+      [[NSMenuItem alloc] initWithTitle:NSLocalizedString(_kMenuLabel, nil)
                                  action:NULL
                           keyEquivalent:@""];
   [[menuItem submenu] addItem:actionMenuItem];
 
   self.formatMenu =
-      [[NSMenu alloc] initWithTitle:NSLocalizedString(@"Clang Format", nil)];
+      [[NSMenu alloc] initWithTitle:NSLocalizedString(_kMenuLabel, nil)];
   [self addMenuItemsToFormatMenu];
   [actionMenuItem setSubmenu:self.formatMenu];
 }
@@ -207,8 +208,10 @@ static TRVSClangFormat *sharedPlugin;
 }
 
 - (BOOL)formatOnSave {
-  return [[self.preferences
-      objectForKey:[self formatOnSavePreferencesKey]] boolValue];
+  id savedPreferences =
+      [self.preferences objectForKey:[self formatOnSavePreferencesKey]];
+
+  return savedPreferences ? [savedPreferences boolValue] : YES;
 }
 
 - (void)toggleUseSystemClangFormat {
@@ -243,7 +246,9 @@ static TRVSClangFormat *sharedPlugin;
 }
 
 - (NSArray *)styles {
-  return @[ @"LLVM", @"Google", @"Chromium", @"Mozilla", @"WebKit", @"File" ];
+  // return @[ @"LLVM", @"Google", @"Chromium", @"Mozilla", @"WebKit", @"File"
+  // ];
+  return @[ @"File" ];
 }
 
 @end

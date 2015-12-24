@@ -29,11 +29,9 @@
 }
 
 - (id)objectForKey:(NSString *)key {
-  CFPropertyListRef value =
-      CFPreferencesCopyValue((__bridge CFStringRef)key,
-                             (__bridge CFStringRef)self.applicationID,
-                             kCFPreferencesCurrentUser,
-                             kCFPreferencesAnyHost);
+  CFPropertyListRef value = CFPreferencesCopyValue(
+      (__bridge CFStringRef)key, (__bridge CFStringRef)self.applicationID,
+      kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
 
   id object = nil;
 
@@ -49,8 +47,7 @@
   CFPreferencesSetValue((__bridge CFStringRef)key,
                         (__bridge CFPropertyListRef)object,
                         (__bridge CFStringRef)self.applicationID,
-                        kCFPreferencesCurrentUser,
-                        kCFPreferencesAnyHost);
+                        kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
 }
 
 - (BOOL)synchronize {

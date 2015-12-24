@@ -2,5 +2,4 @@
 BasedOnStyle:  Chromium
 PointerBindsToType: false
 ObjCSpaceAfterProperty: true
-SortIncludes: false
 ...

@@ -10,6 +10,17 @@
 
 @implementation TRVSXcode
 
++ (IDEWorkspace *)currentWorkspace {
+  if ([[self windowController]
+          isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")]) {
+    IDEWorkspaceWindowController *workspaceController =
+        (IDEWorkspaceWindowController *)[self windowController];
+
+    return [workspaceController valueForKey:@"_workspace"];
+  }
+  return nil;
+}
+
 + (id)currentEditor {
   if ([[self windowController]
           isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")]) {
@@ -80,16 +91,16 @@
 
   [[currentNavigator selectedObjects]
       enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-          if (![obj isKindOfClass:NSClassFromString(@"IDEFileNavigableItem")])
-            return;
+        if (![obj isKindOfClass:NSClassFromString(@"IDEFileNavigableItem")])
+          return;
 
-          IDEFileNavigableItem *fileNavigableItem = obj;
-          NSString *uti = fileNavigableItem.documentType.identifier;
-          if ([[NSWorkspace sharedWorkspace]
-                            type:uti
-                  conformsToType:(NSString *)kUTTypeSourceCode]) {
-            [array addObject:fileNavigableItem];
-          }
+        IDEFileNavigableItem *fileNavigableItem = obj;
+        NSString *uti = fileNavigableItem.documentType.identifier;
+        if ([[NSWorkspace sharedWorkspace]
+                          type:uti
+                conformsToType:(NSString *)kUTTypeSourceCode]) {
+          [array addObject:fileNavigableItem];
+        }
       }];
 
   return array;

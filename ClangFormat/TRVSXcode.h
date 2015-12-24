@@ -38,6 +38,7 @@
 @interface DVTFilePath : NSObject
 @property (readonly) NSURL *fileURL;
 @property (readonly) DVTFileDataType *fileDataTypePresumed;
+@property (readonly) NSString *pathString;
 @end
 
 @interface IDEContainerItem : NSObject
@@ -124,6 +125,8 @@
 @end
 
 @interface TRVSXcode : NSObject
+
++ (IDEWorkspace *)currentWorkspace;
 
 + (IDESourceCodeDocument *)sourceCodeDocument;
 + (NSTextView *)textView;
